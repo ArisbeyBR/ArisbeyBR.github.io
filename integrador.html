@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Directivo | Secundaria Técnica 14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Montserrat:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+ <!-- ICONOS -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <link rel="stylesheet" href="integrador.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+  <div id="screen-app">
+<header>
+  <a href="#" class="logo">
+    <div class="logo-s">S14</div>
+    <div class="logo-text">
+      <strong>Esc. Sec. Téc. 14 "RAMON LOPEZ VELARDE"</strong>
+      <span>Sistema de Gestión de Permisos</span>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+</header>
+  <div id="screen-app">
+    <!-- TOPBAR -->
+ <div class="hero">
+  <div class="hero-inner">
+    <h1>Administración de Permisos</h1>
+    <p>Aprobación de justificantes de ausencias, retardos y salidas · Ciclo escolar 2025–2026</p>
+  <div class="tb-right">
+        <!-- Notificaciones -->
+       <div class="notif-btn" onclick="toggleNotif()" style="position:relative;">
+  
+  <i class="fas fa-bell"></i>
+  <span class="notif-count" id="notif-count" style="display:none;">0</span>
+</div>
+
+<!-- Panel de notificaciones -->
+<div class="notif-panel" id="notif-panel" style="display:none;">
+  <div class="notif-panel-header">
+    <span>Notificaciones</span>
+    <span class="notif-count-label" id="notif-count-label">0 pendientes</span>
+  </div>
+  <div class="notif-list" id="notif-list">
+    <div class="notif-empty">Sin notificaciones</div>
+  </div>
+</div>
+
+        <!-- Usuario -->
+        <div class="user-chip" onclick="toggleUserMenu()">
+          <div class="user-avatar" id="tb-avatar">MV</div>
+          <div class="user-name" id="tb-username">Lic. María Vega</div>
+        </div>
+
+        <!-- Menú desplegable usuario -->
+        <div class="user-menu" id="user-menu">
+          <div onclick="goPage('Perfil.html')">PERFIL</div>
+          <div onclick="goPage('CambiarContrasena.html')">CAMBIAR CONTRASEÑA</div>
+     
+        </div>
+
+        <!-- Botón salir directo -->
+        <button class="btn-salir" onclick="logout()">SALIR</button>
+      </div>
+    </div>
+</div>
+
+      </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active">Directivo</div>
+  </div>
+</div>
+
+
+    <div class="app-body">
+
+       <aside class="sidebar">
+    <!-- MENU -->
+    <div class="sb-section">
+
+      <div class="nav-item active" onclick="goPage('solicitudes', this)">
+        <i class="fa-solid fa-inbox"></i>
+        <span>Bandeja de solicitudes</span>
+      </div>
+
+      <div class="nav-item" onclick="goPage('permisos', this)">
+        <i class="fa-solid fa-circle-plus"></i>
+        <span>Solicitar permiso</span>
+      </div>
+
+      <div class="nav-item" onclick="goPage('reporte', this)">
+        <i class="fa-solid fa-chart-column"></i>
+        <span>Reporte mensual</span>
+      </div>
+
+    </div>
+
+    <hr class="sb-separator">
+
+    <!-- ACTIVIDAD -->
+    <div class="sb-section">
+
+      <div class="sb-label">
+        ACTIVIDAD RECIENTE
+      </div>
+
+     <div id="activity-list" class="activity-list">
+  <div class="activity-item">
+    Sin actividades
+  </div>
+</div>
+
+    </div>
+
+
+  </aside>
+
+      <!----------------------- CONTENIDO DENTRO DEL PANEL------------------------>
+
+      <div class="main-content">
+
+        <!-- ================= SOLICITUDES ================= -->
+        <div class="page active" id="page-solicitudes">
+
+          <!-- HEADER -->
+         <div class="page-header">
+            <div>
+              <div class="ph-title">Bandeja de solicitudes</div>
+              <div class="ph-sub">FORMULARIO EN LÍNEA · CICLO 2025–2026</div>
+              </div>
+                <p class="sub">Todas las solicitudes del plantel</p>
+          </div>
+
+
+           <!-- TOOLBAR -->
+          <div class="toolbar">
+            <form id="buscarform" class="toolbar-content" onsubmit="return false;">
+              <!-- Buscador -->
+              <div class="cajabuscar">
+                <input type="text" id="s" placeholder="Buscar por nombre completo "
+                  oninput="renderSolicitudes()">
+                <button type="submit" class="search">
+              
+                </button>
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="acciones">
+                <button class="btn export" onclick="exportarBandeja()">↓ Exportar</button>
+        <button class="btn success" onclick="aprobarPendientes()">✓ Aprobar pendientes</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- FILTROS -->
+          <div class="filters">
+            <button onclick="setFiltro('todas', this)" class="filtro active">TODAS</button>
+            <button onclick="setFiltro('pendiente', this)" class="filtro">PENDIENTES</button>
+            <button onclick="setFiltro('falta', this)" class="filtro">FALTAS</button>
+            <button onclick="setFiltro('permiso', this)" class="filtro">PERMISOS</button>
+            <button onclick="setFiltro('retardo', this)" class="filtro">RETARDOS</button>
+            <button onclick="setFiltro('salida', this)" class="filtro">SALIDAS</button>
+            <div class="acciones">
+              <select class="ordenar">
+                <option>Más recientes</option>
+                <option>Por nombre</option>
+                <option>Por tipo</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- LISTA DE SOLICITUDES -->
+          <div id="dir-list"></div>
+
+          <!-- MODAL DETALLE -->
+          <div id="modal" class="modal" onclick="if(event.target === this) cerrarModal()">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title">Detalle de Solicitud</h2>
+                <button class="modal-close" onclick="cerrarModal()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div class="modal-body">
+                <!-- Nombre y Alumno -->
+                <div class="modal-section">
+                  <span class="modal-label">Nombre del Alumno</span>
+                  <div class="modal-value" id="m-nombre">—</div>
+                </div>
+
+                <!-- CURP -->
+                <div class="modal-section">
+                  <span class="modal-label">CURP</span>
+                  <div class="modal-value" id="m-curp">—</div>
+                </div>
+
+                <!-- Grupo/Grado -->
+                <div class="modal-section">
+                  <span class="modal-label">Grado / Grupo</span>
+                  <div class="modal-value" id="m-grupo">—</div>
+                </div>
+
+                <!-- Fecha -->
+                <div class="modal-section">
+                  <span class="modal-label">Fecha</span>
+                  <div class="modal-value" id="m-fecha">—</div>
+                </div>
+
+                <!-- Tipo y Estado -->
+                <div class="modal-section">
+                  <span class="modal-label">Tipo y Estado</span>
+                  <div>
+                    <span class="modal-badge tipo" id="m-tipo-badge">—</span>
+                    <span class="modal-badge" id="m-estado-badge">—</span>
+                  </div>
+                </div>
+
+                <!-- Motivo -->
+                <div class="modal-section">
+                  <span class="modal-label">Motivo / Observaciones</span>
+                  <div class="modal-value" id="m-motivo">—</div>
+                </div>
+
+                <div class="modal-divider"></div>
+
+                <!-- Botones de acción -->
+                <div class="modal-actions">
+                  <button class="modal-btn aprobar" id="m-btn-aprobar" onclick="approveFromModal()">
+                    <i class="fas fa-check"></i> Aprobar
+                  </button>
+                  <button class="modal-btn rechazar" id="m-btn-rechazar" onclick="rejectFromModal()">
+                    <i class="fas fa-times"></i> Rechazar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ================= PERMISOS ================= -->
+        <div class="page" id="page-permisos">
+
+          <!-- HEADER -->
+          <div class="page-header">
+            <div>
+              <div class="ph-title">Solicitar permiso</div>
+              <div class="ph-sub">FORMULARIO EN LÍNEA · CICLO 2025–2026</div>
+            </div>
+          </div>
+
+          <!-- CONTENEDOR PRINCIPAL -->
+          <div class="solicitar-container">
+
+            <!-- ================= FORMULARIO ================= -->
+            <form class="permiso-form" onsubmit="guardarSolicitud(); return false;">
+
+              <!-- TOGGLE ALUMNO / DOCENTE -->
+        <div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active" onclick="seleccionarTab(this, 'alumno')">Padre / Tutor</div>
+    <div class="tab" onclick="seleccionarTab(this, 'docente')">Docente</div>
+  </div>
+</div>
+
+              <!-- ===== FORMULARIO ALUMNO ===== -->
+              <div id="form-alumno">
+
+                <!-- TIPO -->
+                <div class="form-section">
+                  <div class="section-header">Tipo de solicitud</div>
+                  <div class="section-body">
+                    <div class="tipo-grid">
+                      <div class="tipo-card" onclick="selectTipo(this,'Falta por enfermedad')">
+                             <div class="icon">✕</div>
+                        <span>Falta por enfermedad</span>
+                      </div>
+                      <div class="tipo-card" onclick="selectTipo(this,'Permiso anticipado')">
+                         <div class="icon">◷</div>
+                        <span>Permiso anticipado</span>
+                      </div>
+                      <div class="tipo-card" onclick="selectTipo(this,'Retardo')">
+                        <div class="icon">◔</div>
+                        <span>Retardo</span>
+                      </div>
+                      <div class="tipo-card" onclick="selectTipo(this,'Salida temprana')">
+                       <div class="icon">↩</div>
+                        <span>Salida temprana</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DATOS ALUMNO -->
+                <div class="form-section">
+                  <div class="section-header">Datos del alumno</div>
+                  <div class="section-body">
+                    <div class="input-group">
+                      <div class="field">
+                        <label>Nombre(s) *</label>
+                        <input id="nombre" oninput="updatePreview('nombre',this.value)">
+                      </div>
+                      <div class="field">
+                        <label>Apellidos *</label>
+                        <input id="apellido" oninput="updatePreview('apellido',this.value)">
+                      </div>
+                    </div>
+                    <div class="input-group">
+                      <div class="field">
+                        <label>CURP </label>
+                        <input id="curp" oninput="updatePreview('curp', this.value)">
+                      </div>
+                      <div class="field">
+                        <label>Grado - Grupo*</label>
+                        <select id="grado" onchange="updatePreview('grado',this.value)">
+                          <option value="">Seleccionar</option>
+                          <option>1°A</option>
+                          <option>1°B</option>
+                          <option>1°C</option>
+                          <option>2°A</option>
+                          <option>2°B</option>
+                          <option>2°C</option>
+                          <option>3°A</option>
+                          <option>3°B</option>
+                          <option>3°C</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>Turno</label>
+                        <select id="turno" onchange="updatePreview('turno',this.value)">
+                          <option>Matutino</option>
+                          <option>Vespertino</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DETALLE AUSENCIA -->
+                <div class="form-section">
+                  <div class="section-header">Detalle de la ausencia</div>
+                  <div class="section-body">
+                    <div class="input-group">
+                      <div class="field">
+                        <label>Fecha *</label>
+                        <input type="date" id="fecha" onchange="updatePreview('fecha', this.value)">
+                      </div>
+                      <div class="field">
+                        <label>Hasta (Opcional)</label>
+                        <input type="date">
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Motivo *</label>
+                      <textarea id="motivo" rows="3" oninput="updatePreview('motivo', this.value)"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DATOS DEL PADRE / TUTOR -->
+                <div class="form-section">
+                  <div class="section-header">DATOS DEL PADRE / TUTOR</div>
+                  <div class="section-body">
+                    <div class="input-group">
+                      <div class="field">
+                        <label>NOMBRE COMPLETO *</label>
+                        <input type="text" id="padre-nombre" oninput="updatePreview('padre-nombre', this.value)"
+                          placeholder="Ej. Juan Pérez">
+                      </div>
+                      <div class="field">
+                        <label>PARENTESCO</label>
+                        <select id="padre-parentesco" onchange="updatePreview('padre-parentesco', this.value)">
+                          <option value="padre">Padre</option>
+                          <option value="madre">Madre</option>
+                          <option value="tutor">Tutor Legal</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="input-group" style="margin-top: 15px;">
+                      <div class="field">
+                        <label>TELÉFONO</label>
+                        <input type="tel" id="padre-tel" oninput="updatePreview('padre-tel', this.value)"
+                          placeholder="000 000 0000">
+                      </div>
+                      <div class="field">
+                        <label>CORREO</label>
+                        <input type="email" id="padre-correo" oninput="updatePreview('padre-correo', this.value)"
+                          placeholder="ejemplo@correo.com">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SECCIÓN DOCUMENTO -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="dot"></div>
+                    <h2>Documento de respaldo <span style="font-size:9px;font-weight:400;font-style:italic;color:var(--text-s)">(opcional)</span></h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="upload-zone" onclick="document.getElementById('archivo').click()">
+                      <p>Toca para adjuntar receta, cita médica o documento</p>
+                      <small>PDF · JPG · PNG · Máx. 5 MB</small>
+                    </div>
+                    <input type="file" id="archivo" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="previewFile(this)">
+                    <div class="file-badge" id="file-badge" style="display:none;">
+                      <span class="name" id="file-name"></span>
+                      <button onclick="removeFile()">✕</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <!-- FIN form-alumno -->
+
+              <!-- ===== FORMULARIO DOCENTE ===== -->
+              <div id="form-docente" style="display:none;">
+
+                <!-- TIPO -->
+                <div class="form-section">
+                  <div class="section-header">Tipo de solicitud</div>
+                  <div class="section-body">
+                    <div class="tipo-grid">
+                      <div class="tipo-card" onclick="selectTipoDocente(this,'Falta por enfermedad')">
+                        <span class="icon">✕</span>
+                        <span>Falta por enfermedad</span>
+                      </div>
+                      <div class="tipo-card" onclick="selectTipoDocente(this,'Permiso anticipado')">
+                        <div class="icon">◷</div>
+                        <span>Permiso anticipado</span>
+                      </div>
+                      <div class="tipo-card" onclick="selectTipoDocente(this,'Retardo')">
+                       <div class="icon">◔</div>
+                        <span>Retardo</span>
+                      </div>
+                      <div class="tipo-card" onclick="selectTipoDocente(this,'Salida temprana')">
+                        <span class="icon">↩</span>
+                        <span>Salida temprana</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DATOS DOCENTE -->
+                <div class="form-section">
+                  <div class="section-header">Datos del docente</div>
+                  <div class="section-body">
+                    <div class="input-group">
+                      <div class="field">
+                        <label>Nombre del docente *</label>
+                        <input id="doc-docente" oninput="updatePreviewDocente('doc-docente', this.value)">
+                      </div>
+                      <div class="field">
+                        <label>Materia *</label>
+                        <input id="doc-materia">
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="field">
+                        <label>Grado - Grupo *</label>
+                        <select id="doc-salon" onchange="updatePreviewDocente('doc-salon', this.value)">
+                          <option value="">—</option>
+                          <option>1°A</option>
+                          <option>1°B</option>
+                          <option>1°C</option>
+                          <option>2°A</option>
+                          <option>2°B</option>
+                          <option>2°C</option>
+                          <option>3°A</option>
+                          <option>3°B</option>
+                          <option>3°C</option>
+                          
+                        </select>
+                      </div>
+
+                      <div class="field">
+                        <label>Fecha *</label>
+                        <input type="date" id="doc-fecha" onchange="updatePreviewDocente('doc-fecha', this.value)">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DETALLE AUSENCIA -->
+                <div class="card">
+                  <div class="card-header"><div class="dot"></div><h2>Detalle de la ausencia</h2></div>
+                  <div class="card-body">
+                    <div class="row cols-2">
+                      <div class="field">
+                        <label for="doc-fecha">Fecha de ausencia<span class="req">*</span></label>
+                        <input id="doc-fecha" type="date" onchange="updatePreviewDocente('doc-fecha', this.value)">
+                      </div>
+                      <div class="field" id="doc-fecha-fin-wrap">
+                        <label>Hasta (si aplica)</label>
+                        <input id="doc-fecha-fin" type="date" onchange="updatePreviewDocente('doc-fecha-fin', this.value)">
+                      </div>
+                    </div>
+                    <div class="row cols-1">
+                      <div class="field">
+                        <label>Observaciones *</label>
+                        <textarea id="doc-observaciones" rows="3" oninput="updatePreviewDocente('doc-observaciones', this.value)"
+                          placeholder="Describe el motivo o circunstancias..."></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SECCIÓN DOCUMENTO -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="dot"></div>
+                    <h2>Documento de respaldo <span style="font-size:9px;font-weight:400;font-style:italic;color:var(--text-s)">(opcional)</span></h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="upload-zone" onclick="document.getElementById('doc-archivo').click()">
+                      <p>Toca para adjuntar receta, cita médica o documento</p>
+                      <small>PDF · JPG · PNG · Máx. 5 MB</small>
+                    </div>
+                    <input type="file" id="doc-archivo" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="previewFileDocente(this)">
+                    <div class="file-badge" id="doc-file-badge" style="display:none;">
+                      <span class="name" id="doc-file-name"></span>
+                      <button onclick="removeFileDocente()">✕</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- FIN form-docente -->
+
+              <div class="form-actions">
+                <button type="reset" class="btn-clear" onclick="limpiarPreview()">Limpiar Formulario</button>
+                <button type="submit" class="btn-submit">Enviar Solicitud</button>
+              </div>
+
+            </form>
+
+            <!-- ================= VISTA PREVIA (DERECHA) ================= -->
+            <div class="preview-container">
+              <div class="preview-card">
+                <div class="preview-header">
+                  <span>VISTA PREVIA</span>
+                  <span class="preview-id">SOL-2026-9680</span>
+                </div>
+                <div class="preview-content">
+
+                  <!-- Vista previa ALUMNO -->
+                  <div id="preview-alumno">
+                    <div class="preview-title">Secundaria Técnica</div>
+                    <div class="preview-subtitle">SISTEMA DE ASISTENCIAS · 2025-2026</div>
+
+                    <center><span class="chip-preview">— <span id="p-tipo">SIN TIPO</span> —</span></center>
+
+                    <div class="preview-item">
+                      <span class="preview-label">ALUMNO</span>
+                      <span class="preview-value" id="p-nombre">Sin nombre</span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">CURP</span>
+                      <span class="preview-value" id="p-curp">Sin CURP</span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">GRADO / TURNO</span>
+                      <span class="preview-value">
+                        <span id="p-grado">Sin grado</span> · <span id="p-turno">Matutino</span>
+                      </span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">FECHA</span>
+                      <span class="preview-value" id="p-fecha">Seleccionar fecha</span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">MOTIVO</span>
+                      <span class="preview-value" id="p-motivo">Sin motivo</span>
+                    </div>
+
+                    <hr style="margin: 10px 0; border-color: #ddd;">
+
+                    <div class="preview-item">
+                      <span class="preview-label" id="p-padre-label">PADRE/TUTOR</span>
+                      <span class="preview-value" id="p-padre-nombre">Sin nombre</span>
+                    </div>
+                    <div class="preview-item">
+                      <span class="preview-label">PARENTESCO</span>
+                      <span class="preview-value" id="p-padre-parentesco">Sin parentesco</span>
+                    </div>
+                    <div class="preview-item">
+                      <span class="preview-label">TELÉFONO</span>
+                      <span class="preview-value" id="p-padre-tel">Sin teléfono</span>
+                    </div>
+                    <div class="preview-item">
+                      <span class="preview-label">CORREO</span>
+                      <span class="preview-value" id="p-padre-correo">Sin correo</span>
+                    </div>
+
+                    <button onclick="descargarPDF()" class="btn-submit" style="width:100%; margin-top:15px;">⬇ Descargar
+                      PDF</button>
+                  </div>
+                  <!-- FIN preview-alumno -->
+
+                  <!-- Vista previa DOCENTE -->
+
+
+                  <!-- Vista previa DOCENTE -->
+                  <div id="preview-docente" style="display:none;">
+                    <div class="preview-title">Secundaria Técnica</div>
+                    <div class="preview-subtitle">REGISTRO DOCENTE · 2025-2026</div>
+
+                    <center>
+                      <span class="chip-preview">— <span id="pd-tipo">SIN TIPO</span> —</span>
+                    </center>
+
+                    <div class="preview-item">
+                      <span class="preview-label">DOCENTE</span>
+                      <span class="preview-value" id="pd-ddocente">Sin docente</span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">GRADO / SALÓN</span>
+                      <span class="preview-value">
+                        <span id="pd-grado">—</span> · <span id="pd-gradosalon">Sin salón</span>
+                      </span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">FECHA</span>
+                      <span class="preview-value" id="pd-fecha">00/00/0000</span>
+                    </div>
+
+                    <div class="preview-item">
+                      <span class="preview-label">OBSERVACIONES</span>
+                      <span class="preview-value" id="pd-observaciones">Sin observaciones</span>
+                    </div>
+
+                    <button onclick="descargarPDFDocente()" class="btn-submit" style="width:100%; margin-top:15px;">
+                      ⬇ Descargar PDF
+                    </button>
+                  </div>
+                  <!-- FIN preview-docente -->
+
+                </div>
+              </div>
+            </div>
+            <!-- FIN preview-container -->
+
+          </div>
+        </div>
+        <!-- FIN page-permisos -->
+
+        <!-- ================= REPORTE MENSUAL ================= -->
+        <div class="page" id="page-reporte">
+<div class="reportemensual">
+
+  <h1>Reporte Mensual</h1>
+  <p class="subtitle">Ciclo escolar 2025-2026 - Coordinación Académica</p>
+
+  <!-- TARJETAS -->
+  <div class="cards">
+    <div class="card">
+      <h2 id="card-asistencia">0%</h2>
+      <p>Asistencia promedio</p>
+    </div>
+    <div class="card">
+      <h2 id="card-total">0</h2>
+      <p>Total solicitudes</p>
+    </div>
+    <div class="card">
+      <h2 id="card-aprobados">0</h2>
+      <p>Aprobadas</p>
+    </div>
+    <div class="card">
+      <h2 id="card-pendientes">0</h2>
+      <p>Pendientes</p>
+    </div>
+  </div>
+
+  <!-- VALIDACIÓN -->
+  <div class="panel">
+    <h2>Motor de validación</h2>
+    <div class="progress-group">
+      <span>Aprobados</span>
+      <div class="progress-bar">
+        <div class="progress green" id="bar-aprobados" style="width: 0%;"></div>
+      </div>
+      <span id="num-aprobados">0</span>
+    </div>
+    <div class="progress-group">
+      <span>Rechazados</span>
+      <div class="progress-bar">
+        <div class="progress red" id="bar-rechazados" style="width: 0%;"></div>
+      </div>
+      <span id="num-rechazados">0</span>
+    </div>
+    <div class="progress-group">
+      <span>Pendientes</span>
+      <div class="progress-bar">
+        <div class="progress blue" id="bar-pendientes" style="width: 0%;"></div>
+      </div>
+      <span id="num-pendientes">0</span>
+    </div>
+  </div>
+
+  <!-- BITÁCORA -->
+  <div class="panel">
+    <h2>Bitácora de auditoría</h2>
+    <div id="bitacora-list">
+      <p>Sin actividad registrada</p>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="panel">
+    <h2>Justificantes recientes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Alumno</th>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody id="reporte-tbody">
+        <tr>
+          <td colspan="4">Sin registros</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+          
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="app.js"></script>
+
+<!-- Driver.js CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+<!-- Botón flotante de ayuda -->
+<button id="btn-ayuda" onclick="iniciarTutorialIntegrador()" title="¿Cómo usar esta página?">
+  ?
+</button>
+</body>
+
+</html>

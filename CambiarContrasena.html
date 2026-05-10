@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cambiar Contraseña | Secundaria Técnica 14</title>
+<link rel="stylesheet" href="StylePermisos.css">
+<link rel="stylesheet" href="StyleSistema.css">
+<style>
+  /* ── Layout centrado ── */
+  .pwd-layout {
+    max-width: 560px; margin: 0 auto;
+  }
+
+  /* ── Requisitos de contraseña ── */
+  .pwd-req-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+    margin-top: 10px;
+  }
+  .pwd-req {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--text-s); transition: color .25s;
+  }
+  .pwd-req .req-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--line); flex-shrink: 0; transition: background .25s;
+  }
+  .pwd-req.ok { color: #16a34a; }
+  .pwd-req.ok .req-dot { background: #22c55e; }
+
+  /* ── Info de seguridad ── */
+  .security-tip {
+    background: var(--guinda-bg); border-left: 3px solid var(--guinda);
+    padding: .8rem 1rem; border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 11.5px; color: var(--text-s); line-height: 1.55;
+    font-family: 'EB Garamond', serif; font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── Avatar centrado ── */
+  .pwd-user-header {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);
+  }
+  .pwd-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--guinda); color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pwd-user-info strong { display: block; font-size: 13px; font-weight: 700; color: var(--text); }
+  .pwd-user-info span { font-size: 10px; color: var(--text-s); letter-spacing: .07em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<header>
+  <a href="#" class="logo">
+    <div class="logo-s">S14</div>
+    <div class="logo-text">
+      <strong>Esc. Sec. Téc. 14 "RAMON LOPEZ VELARDE"</strong>
+      <span>Sistema de Gestión de Permisos</span>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+</header>
+
+
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="#">Inicio</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="Perfil.html">Perfil</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Cambiar contraseña</span>
+    </div>
+    <h1>Cambiar Contraseña</h1>
+    <p>Actualiza las credenciales de acceso a tu cuenta</p>
+  </div>
+</div>
+
+<div class="page-main">
+  <div class="pwd-layout">
+
+    <!-- Alertas -->
+    <div class="alert alert-success" id="alert-success">
+      <span class="alert-icon">✓</span>
+      <div class="alert-body">
+        <strong>Contraseña actualizada correctamente.</strong>
+        Usa tu nueva contraseña la próxima vez que inicies sesión.
+      </div>
+    </div>
+    <div class="alert alert-danger" id="alert-error">
+      <span class="alert-icon">✕</span>
+      <div class="alert-body" id="alert-error-msg">
+        <strong>Ocurrió un error.</strong>
+        Verifica los datos e intenta nuevamente.
+      </div>
+    </div>
+
+    <!-- Tarjeta usuario -->
+    <div class="pwd-user-header">
+      <div class="pwd-avatar" id="pwd-avatar">MG</div>
+      <div class="pwd-user-info">
+        <strong id="pwd-name">María González Morales</strong>
+        <span id="pwd-role">Docente · Secundaria Técnica 14</span>
+      </div>
+    </div>
+
+    <!-- Tip de seguridad -->
+    <div class="security-tip">
+      Elige una contraseña que no hayas usado antes. Evita usar tu nombre, fecha de nacimiento o datos fáciles de adivinar. Tu contraseña nunca será solicitada por personal de la escuela.
+    </div>
+
+    <!-- Formulario -->
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-dot"></div>
+        <h2>Nueva contraseña</h2>
+      </div>
+      <div class="card-body">
+
+        <!-- Contraseña actual -->
+        <div class="form-row cols-1" style="margin-bottom:1.25rem">
+          <div class="form-field">
+            <label>Contraseña actual<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input id="pwd-actual" type="password" placeholder="Ingresa tu contraseña actual">
+              <button class="input-eye" type="button" onclick="toggleVer('pwd-actual', this)">👁</button>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Nueva contraseña -->
+        <div class="form-row cols-1">
+          <div class="form-field">
+            <label>Nueva contraseña<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input id="pwd-nueva" type="password" placeholder="Mínimo 8 caracteres"
+                oninput="evalStrength(); checkMatch(); validateBtn()">
+              <button class="input-eye" type="button" onclick="toggleVer('pwd-nueva', this)">👁</button>
+            </div>
+            <!-- Medidor de fortaleza -->
+            <div class="strength-meter" id="strength-meter" style="display:none">
+              <div class="strength-bars">
+                <div class="strength-bar" id="sb1"></div>
+                <div class="strength-bar" id="sb2"></div>
+                <div class="strength-bar" id="sb3"></div>
+                <div class="strength-bar" id="sb4"></div>
+              </div>
+              <span class="strength-label" id="strength-label">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Requisitos -->
+        <div class="pwd-req-list" id="req-list">
+          <div class="pwd-req" id="req-len"><span class="req-dot"></span>Mínimo 8 caracteres</div>
+          <div class="pwd-req" id="req-upper"><span class="req-dot"></span>Una mayúscula</div>
+          <div class="pwd-req" id="req-num"><span class="req-dot"></span>Un número</div>
+          <div class="pwd-req" id="req-special"><span class="req-dot"></span>Un carácter especial</div>
+        </div>
+
+        <div style="margin-top:1.25rem"></div>
+
+        <!-- Repetir contraseña -->
+        <div class="form-row cols-1">
+          <div class="form-field">
+            <label>Repite la nueva contraseña<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input id="pwd-confirmar" type="password" placeholder="Repite la contraseña"
+                oninput="checkMatch(); validateBtn()">
+              <button class="input-eye" type="button" onclick="toggleVer('pwd-confirmar', this)">👁</button>
+            </div>
+            <span class="form-hint" id="match-hint"></span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a href="Perfil.html" class="btn btn-secondary">Cancelar</a>
+          <button class="btn btn-primary" id="btn-actualizar" disabled onclick="actualizarContrasena()">
+            Actualizar contraseña
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<footer class="page-footer">
+  Secundaria Técnica 14 · Sistema de Gestión Escolar · Ciclo 2025–2026
+</footer>
+
+<script src="Sistema.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S = SESSION;
+  document.getElementById('pwd-avatar').textContent = getInitials(S.nombre, S.apellidos);
+  document.getElementById('pwd-name').textContent   = `${S.nombre} ${S.apellidos}`;
+  document.getElementById('pwd-role').textContent   = `${S.rol} · ${S.escuela}`;
+});
+
+/* ─── Ver/ocultar contraseña ────────────────────── */
+function toggleVer(id, btn) {
+  const input = document.getElementById(id);
+  const isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.textContent = isText ? '👁' : '🙈';
+}
+
+/* ─── Evaluación de fortaleza ───────────────────── */
+function evalStrength() {
+  const val = document.getElementById('pwd-nueva').value;
+  const meter = document.getElementById('strength-meter');
+
+  if (!val) { meter.style.display = 'none'; return; }
+  meter.style.display = 'block';
+
+  const checks = {
+    len:     val.length >= 8,
+    upper:   /[A-Z]/.test(val),
+    num:     /[0-9]/.test(val),
+    special: /[^A-Za-z0-9]/.test(val),
+  };
+
+  // Requisitos visuales
+  document.getElementById('req-len').classList.toggle('ok',     checks.len);
+  document.getElementById('req-upper').classList.toggle('ok',   checks.upper);
+  document.getElementById('req-num').classList.toggle('ok',     checks.num);
+  document.getElementById('req-special').classList.toggle('ok', checks.special);
+
+  const score = Object.values(checks).filter(Boolean).length;
+  const bars  = [document.getElementById('sb1'), document.getElementById('sb2'),
+                 document.getElementById('sb3'), document.getElementById('sb4')];
+  const labels = ['', 'Débil', 'Regular', 'Buena', 'Fuerte'];
+  const cls    = ['', 'weak', 'fair', 'strong', 'strong'];
+
+  bars.forEach((b, i) => {
+    b.className = 'strength-bar';
+    if (i < score) b.classList.add(cls[score]);
+  });
+  document.getElementById('strength-label').textContent = labels[score] || '';
+  document.getElementById('strength-label').style.color =
+    score === 4 ? '#16a34a' : score >= 2 ? '#d97706' : '#ef4444';
+}
+
+/* ─── Verificar coincidencia ────────────────────── */
+function checkMatch() {
+  const a = document.getElementById('pwd-nueva').value;
+  const b = document.getElementById('pwd-confirmar').value;
+  const hint = document.getElementById('match-hint');
+  if (!b) { hint.textContent = ''; return; }
+  if (a === b) {
+    hint.textContent = '✓ Las contraseñas coinciden';
+    hint.style.color = '#16a34a';
+  } else {
+    hint.textContent = '✕ Las contraseñas no coinciden';
+    hint.style.color = 'var(--danger)';
+  }
+}
+
+/* ─── Habilitar botón ────────────────────────────── */
+function validateBtn() {
+  const actual    = document.getElementById('pwd-actual').value.trim();
+  const nueva     = document.getElementById('pwd-nueva').value;
+  const confirmar = document.getElementById('pwd-confirmar').value;
+  const strong    = nueva.length >= 8 && /[A-Z]/.test(nueva) && /[0-9]/.test(nueva);
+  const match     = nueva === confirmar && confirmar !== '';
+  document.getElementById('btn-actualizar').disabled = !(actual && strong && match);
+}
+
+// Validar también al escribir la actual
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pwd-actual').addEventListener('input', validateBtn);
+});
+
+/* ─── Guardar ────────────────────────────────────── */
+function actualizarContrasena() {
+  // Simula validación de contraseña actual
+  const actual = document.getElementById('pwd-actual').value;
+  if (actual !== '1234' && actual.length < 1) {   // en prod: comparar con hash
+    showAlert('error', '<strong>Contraseña actual incorrecta.</strong> Verifica e intenta de nuevo.');
+    return;
+  }
+  // Limpiar campos
+  ['pwd-actual','pwd-nueva','pwd-confirmar'].forEach(id =>
+    document.getElementById(id).value = '');
+  document.getElementById('strength-meter').style.display = 'none';
+  document.getElementById('match-hint').textContent = '';
+  document.getElementById('btn-actualizar').disabled = true;
+  document.getElementById('req-list').querySelectorAll('.pwd-req').forEach(r => r.classList.remove('ok'));
+
+  showAlert('success');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showAlert(type, html) {
+  const id  = type === 'success' ? 'alert-success' : 'alert-error';
+  const other = type === 'success' ? 'alert-error' : 'alert-success';
+  document.getElementById(other).classList.remove('show');
+  const el = document.getElementById(id);
+  if (html && type === 'error') document.getElementById('alert-error-msg').innerHTML = html;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+</script>
+<!-- Driver.js CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+<!-- Botón flotante de ayuda -->
+<button id="btn-ayuda" onclick="iniciarTutorialPass()" title="¿Cómo usar esta página?">
+  ?
+</button>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!--PERMISOS LA MEJOR VERSIÓN-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitud de Permisos | Secundaria Técnica 14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Montserrat:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="StyleDocentev2.css">
+</head>
+<body>
+<header>
+  <a href="#" class="logo">
+    <div class="logo-s">S14</div>
+    <div class="logo-text">
+      <strong>Esc. Sec. Téc. 14 "RAMON LOPEZ VELARDE"</strong>
+      <span>Sistema de Gestión de Permisos</span>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Asistencias</h1>
+    <p>Registro de ausencias, retardos y salidas · Ciclo escolar 2025–2026</p>
+  <div class="tb-right">
+               <!-- Notificaciones 
+       <div class="notif-btn" onclick="toggleNotif()" style="position:relative;">
+  
+  <i class="fas fa-bell"></i>
+  <span class="notif-count" id="notif-count" style="display:none;">0</span>
+</div>
+
+ Panel de notificaciones 
+<div class="notif-panel" id="notif-panel" style="display:none;">
+  <div class="notif-panel-header">
+    <span>Notificaciones</span>
+    <span class="notif-count-label" id="notif-count-label">0 pendientes</span>
+  </div>
+  <div class="notif-list" id="notif-list">
+    <div class="notif-empty">Sin notificaciones</div>
+  </div>
+</div>-->
+
+        <!-- Usuario -->
+        <div class="user-chip" onclick="toggleUserMenu(event)">
+          <div class="user-avatar" id="tb-avatar">MV</div>
+          <div class="user-name" id="tb-username">Lic. María Vega</div>
+        </div>
+
+        <!-- Menú desplegable usuario -->
+        <div class="user-menu" id="user-menu">
+          <a href="#" onclick="goPage('Perfil.html')">PERFIL</a>
+          <a href="#" onclick="goPage('CambiarContrasena.html')">CAMBIAR CONTRASEÑA</a>
+        
+        </div>
+
+      </div>
+    </div>
+</div>
+
+      </div>
+</div>
+
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active">Docente</div>
+  </div>
+</div>
+  <!-- CONTENIDO -->
+  <main class="content">
+    <div class="content-date" id="fecha-display">—</div>
+
+    <!-- Alertas -->
+    <div class="alert alert-success" id="alert-ok">
+      <span>✓</span>
+      <div><strong>Asistencias guardadas correctamente.</strong> El registro ha sido actualizado.</div>
+    </div>
+    <div class="alert alert-danger" id="alert-lock">
+      <span></span>
+      <div><strong>Registro bloqueado.</strong> Esta fila ya fue aprobada por dirección y no puede editarse.</div>
+    </div>
+
+    <!-- Barra de herramientas -->
+    <div class="tools-bar">
+      <div class="tf">
+        <label>Salón</label>
+        <select id="salon-sel" class="att-r" onchange="cambiarSalon()">
+          <option value="1A">1°A – Matutino</option>
+          <option value="1B">1°B – Matutino</option>
+          <option value="2A">2°A – Matutino</option>
+          <option value="2B">2°B – Vespertino</option>
+          <option value="3A" selected>3°A – Matutino</option>
+          <option value="3B">3°B – Vespertino</option>
+        </select>
+      </div>
+      <div class="tf">
+        <label>Fecha</label>
+        <input type="date" id="fecha-sel" onchange="cambiarFecha()">
+      </div>
+      <div class="tf">
+        <label>Filtrar alumno</label>
+        <input type="text" id="filtro" placeholder="Buscar por apellido…" oninput="filtrarTabla()">
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:flex-end;">
+        <div style="font-size:10px;color:#7A5A4A;background:#fdf6ee;border:1px solid var(--line);border-radius:var(--radius);padding:6px 12px;display:flex;align-items:center;gap:6px;">
+          <span>Las filas grises están <strong>bloqueadas</strong> por aprobación del directivo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leyenda -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;">
+      <span style="font-size:10px;display:flex;align-items:center;gap:5px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:var(--success);display:inline-block"></span> P = Puntualidad
+      </span>
+      <span style="font-size:10px;display:flex;align-items:center;gap:5px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:var(--danger);display:inline-block"></span> A = Ausencia
+      </span>
+      <span style="font-size:10px;display:flex;align-items:center;gap:5px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:var(--oxido);display:inline-block"></span> T = Tardanza
+      </span>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-left">
+          <div class="ch-dot"></div>
+          <span class="ch-title">Lista de asistencia – <span id="salon-titulo">3°A Matutino</span></span>
+        </div>
+        <span id="resumen-badge" style="font-size:10px;color:#7A5A4A;"></span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <div class="att-wrap">
+          <table class="att-table" id="att-table">
+            <thead>
+              <tr>
+                <th style="width:80px">ID</th>
+                <th>Nombre del estudiante</th>
+                <th class="c" style="width:55px">P</th>
+                <th class="c" style="width:55px">A</th>
+                <th class="c" style="width:55px">T</th>
+                <th>Notas / Observaciones</th>
+                <th class="c" style="width:110px">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="att-tbody">
+              <!-- Filas generadas por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:.5rem;">
+      <button class="btn btn-secondary" onclick="resetPase()">Reiniciar lista</button>
+      <button class="btn btn-primary" onclick="guardarPase()">Guardar asistencias</button>
+    </div>
+  </main>
+</div>
+
+<!-- Modal logout -->
+<div class="modal-overlay" id="logout-modal">
+  <div class="modal-box">
+    <h3>¿Cerrar sesión?</h3>
+    <p>Se cerrará tu sesión actual. Tendrás que volver a ingresar tus credenciales.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeLogout()">Cancelar</button>
+      <button class="btn btn-danger" onclick="doLogout()">Sí, cerrar sesión</button>
+    </div>
+  </div>
+</div>
+<script src="Sistema.js"></script>
+<script>
+/* ══════════════════════════════════════════════
+   DATOS SIMULADOS
+   ══════════════════════════════════════════════ */
+
+// Alumnos por salón
+const ALUMNOS = {
+  '3A': [
+    { legajo:'10301', nombre:'Alvarado, Luis Felipe' },
+    { legajo:'10302', nombre:'Bermúdez, Ana María' },
+    { legajo:'10303', nombre:'Castaño, Diego Alonso' },
+    { legajo:'10304', nombre:'Duarte, Sofía Valentina' },
+    { legajo:'10305', nombre:'Espinoza, Renata' },
+    { legajo:'10306', nombre:'Fuentes, Jorge Alberto' },
+    { legajo:'10307', nombre:'García, Ximena' },
+    { legajo:'10308', nombre:'Herrera, Tomás Eduardo' },
+  ],
+  '1A': [
+    { legajo:'10101', nombre:'Acosta, Valentina' },
+    { legajo:'10102', nombre:'Barrera, Miguel Ángel' },
+    { legajo:'10103', nombre:'Carrillo, Fernanda' },
+  ],
+  '1B': [
+    { legajo:'10110', nombre:'Delgado, Iván' },
+    { legajo:'10111', nombre:'Estrada, Camila' },
+  ],
+  '2A': [
+    { legajo:'10201', nombre:'Flores, Ricardo' },
+    { legajo:'10202', nombre:'Gómez, Daniela' },
+    { legajo:'10203', nombre:'Hidalgo, Sebastián' },
+  ],
+  '2B': [
+    { legajo:'10210', nombre:'Ibarra, Lucero' },
+    { legajo:'10211', nombre:'Jiménez, Pablo' },
+  ],
+  '3B': [
+    { legajo:'10310', nombre:'Lara, Vanessa' },
+    { legajo:'10311', nombre:'Mora, Emilio' },
+    { legajo:'10312', nombre:'Navarro, Isabela' },
+  ],
+};
+
+// Registros aprobados por el directivo (legajo => estado bloqueado)
+// Simula que algunos alumnos ya tienen permiso aprobado en cierta fecha
+const APROBADOS = {
+  // legajo: { fecha: 'YYYY-MM-DD', tipo: 'Falta por enfermedad', obs: 'Justificante médico' }
+  '10302': { fecha: '2026-04-28', tipo:'Falta por enfermedad', obs:'Justificante médico' },
+  '10303': { fecha: '2026-04-28', tipo:'Permiso anticipado', obs:'Cita IMSS' },
+};
+
+let salonActual = '3A';
+let fechaActual = '';
+
+/* ══════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Fecha hoy
+  const hoy = new Date().toISOString().split('T')[0];
+  fechaActual = hoy;
+  document.getElementById('fecha-sel').value = hoy;
+
+  // Fecha display
+  document.getElementById('fecha-display').textContent =
+    new Date().toLocaleDateString('es-MX', { weekday:'long', day:'numeric', month:'long', year:'numeric' }).toUpperCase();
+
+  renderTabla();
+});
+
+/* ══════════════════════════════════════════════
+   RENDER TABLA
+   ══════════════════════════════════════════════ */
+function renderTabla() {
+  const alumnos = ALUMNOS[salonActual] || [];
+  const tbody = document.getElementById('att-tbody');
+  tbody.innerHTML = '';
+
+  alumnos.forEach((a, i) => {
+    const aprobado = APROBADOS[a.legajo] && APROBADOS[a.legajo].fecha === fechaActual;
+    const tr = document.createElement('tr');
+    if (aprobado) tr.classList.add('locked');
+    else if (i % 2 !== 0) tr.classList.add('alt');
+
+    tr.dataset.nombre = a.nombre.toLowerCase();
+
+    // Estado predeterminado: P=puntual, A si aprobado=ausente
+    const defP = aprobado ? '' : 'checked';
+    const defA = aprobado ? 'checked' : '';
+
+    tr.innerHTML = `
+      <td class="legajo">${a.legajo}</td>
+      <td style="font-weight:600">${a.nombre}</td>
+      <td class="c">
+        <input type="radio" class="att-r" name="att_${a.legajo}" value="P" ${defP} ${aprobado ? 'disabled' : ''}>
+      </td>
+      <td class="c">
+        <input type="radio" class="att-r" name="att_${a.legajo}" value="A" ${defA} ${aprobado ? 'disabled' : ''}>
+      </td>
+      <td class="c">
+        <input type="radio" class="att-r" name="att_${a.legajo}" value="T" ${aprobado ? 'disabled' : ''}>
+      </td>
+      <td>
+        <input type="text" class="obs-in"
+          placeholder="${aprobado ? APROBADOS[a.legajo].obs : 'Sin observaciones'}"
+          value="${aprobado ? APROBADOS[a.legajo].obs : ''}"
+          ${aprobado ? 'disabled' : ''}>
+      </td>
+      <td class="c">
+        ${aprobado
+          ? `<span class="e-badge e-aprobado"> Aprobado</span>`
+          : `<span class="e-badge e-libre">Editable</span>`
+        }
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  actualizarResumen();
+}
+
+function actualizarResumen() {
+  const alumnos = ALUMNOS[salonActual] || [];
+  const bloqueados = alumnos.filter(a => APROBADOS[a.legajo] && APROBADOS[a.legajo].fecha === fechaActual).length;
+  document.getElementById('resumen-badge').textContent =
+    `${alumnos.length} alumnos · ${bloqueados} bloqueados`;
+}
+
+/* ══════════════════════════════════════════════
+   EVENTOS
+   ══════════════════════════════════════════════ */
+function cambiarSalon() {
+  salonActual = document.getElementById('salon-sel').value;
+  const opts = document.getElementById('salon-sel');
+  document.getElementById('salon-titulo').textContent =
+    opts.options[opts.selectedIndex].text;
+  renderTabla();
+}
+
+function cambiarFecha() {
+  fechaActual = document.getElementById('fecha-sel').value;
+  renderTabla();
+}
+
+function filtrarTabla() {
+  const q = document.getElementById('filtro').value.toLowerCase();
+  document.querySelectorAll('#att-tbody tr').forEach(tr => {
+    tr.style.display = tr.dataset.nombre.includes(q) ? '' : 'none';
+  });
+}
+
+function resetPase() {
+  if (!confirm('¿Reiniciar la lista? Los cambios no guardados se perderán.')) return;
+  renderTabla();
+}
+
+function guardarPase() {
+  // Mostrar alert de éxito
+  const al = document.getElementById('alert-ok');
+  al.classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => al.classList.remove('show'), 4000);
+}
+
+/* ══════════════════════════════════════════════
+   DROPDOWN / LOGOUT
+   ══════════════════════════════════════════════ */
+function toggleUserMenu(event) {
+  event.stopPropagation();
+  const menu = document.getElementById('user-menu');
+  menu.classList.toggle('show');
+}
+
+document.addEventListener('click', e => {
+  const menu = document.getElementById('user-menu');
+  if (menu && !menu.previousElementSibling.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.remove('show');
+  }
+});
+
+function goPage(page) {
+  window.location.href = page;
+}
+
+function toggleDropdown() {
+  document.getElementById('user-dd').classList.toggle('open');
+  document.getElementById('hero-pill').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const u = document.getElementById('hero-user');
+  if (u && !u.contains(e.target)) {
+    document.getElementById('user-dd').classList.remove('open');
+    document.getElementById('hero-pill').classList.remove('open');
+  }
+});
+function openLogout()  { document.getElementById('logout-modal').classList.add('open'); }
+function closeLogout() { document.getElementById('logout-modal').classList.remove('open'); }
+function doLogout()    { window.location.href = 'index.html'; }
+
+
+</script>
+
+<!-- Driver.js CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+<!-- Botón flotante de ayuda -->
+<button id="btn-ayuda" onclick="iniciarTutorial()" title="¿Cómo usar esta página?">
+  ?
+</button>
+</body>
+</html>

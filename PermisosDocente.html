@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!--PERMISOS LA MEJOR VERSIÓN-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitud de Permisos | Secundaria Técnica 14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Montserrat:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="StylePermisosDocente.css">
+</head>
+<body>
+<header>
+  <a href="#" class="logo">
+    <div class="logo-s">S14</div>
+    <div class="logo-text">
+      <strong>Esc. Sec. Téc. 14 "RAMON LOPEZ VELARDE"</strong>
+      <span>Sistema de Gestión de Permisos</span>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+</header>
+
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Solicitud de Permisos</h1>
+    <p>Registro de ausencias, retardos y salidas · Ciclo escolar 2025–2026</p>
+  <div class="tb-right">
+         <!-- Notificaciones 
+       <div class="notif-btn" onclick="toggleNotif()" style="position:relative;">
+  
+  <i class="fas fa-bell"></i>
+  <span class="notif-count" id="notif-count" style="display:none;">0</span>
+</div>
+
+ Panel de notificaciones 
+<div class="notif-panel" id="notif-panel" style="display:none;">
+  <div class="notif-panel-header">
+    <span>Notificaciones</span>
+    <span class="notif-count-label" id="notif-count-label">0 pendientes</span>
+  </div>
+  <div class="notif-list" id="notif-list">
+    <div class="notif-empty">Sin notificaciones</div>
+  </div>
+</div>-->
+
+        <!-- Usuario -->
+        <div class="user-chip" onclick="toggleUserMenu(event)">
+          <div class="user-avatar" id="tb-avatar">MV</div>
+          <div class="user-name" id="tb-username">Lic. María Vega</div>
+        </div>
+
+        <!-- Menú desplegable usuario -->
+        <div class="user-menu" id="user-menu">
+          <a href="#" onclick="goPage('Perfil.html')">PERFIL</a>
+          <a href="#" onclick="goPage('CambiarContrasena.html')">CAMBIAR CONTRASEÑA</a>
+        
+        </div>
+
+      </div>
+    </div>
+</div>
+
+      </div>
+</div>
+
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active">Docente</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="panel active" id="panel-padres">
+    <div class="two-col">
+      <div>
+
+        <!-- TIPO -->
+        <div class="card">
+          <div class="card-header"><div class="dot"></div><h2>Tipo de solicitud</h2></div>
+          <div class="card-body">
+            <div class="tipo-grid">
+              <div class="tipo-opt" data-tipo="falta" onclick="selectTipo('falta', this)">
+                <div class="icon">✕</div>
+                <div class="label">Falta por<br>enfermedad</div>
+              </div>
+              <div class="tipo-opt" data-tipo="permiso" onclick="selectTipo('permiso', this)">
+                <div class="icon">◷</div>
+                <div class="label">Permiso<br>anticipado</div>
+              </div>
+              <div class="tipo-opt" data-tipo="retardo" onclick="selectTipo('retardo', this)">
+                <div class="icon">◔</div>
+                <div class="label">Retardo</div>
+              </div>
+              <div class="tipo-opt" data-tipo="salida" onclick="selectTipo('salida', this)">
+                <div class="icon">↩</div>
+                <div class="label">Salida<br>temprana</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATOS DOCENTE -->
+        <div class="card">
+          <div class="card-header"><div class="dot"></div><h2>Datos Personales</h2></div>
+          <div class="card-body">
+            <div class="row cols-2">
+              <div class="field">
+                <label>Nombre(s)<span class="req">*</span></label>
+                <input id="p-nombre" type="text" placeholder="Ej. Sofía" oninput="updatePreview()">
+              </div>
+              <div class="field">
+                <label>Apellidos<span class="req">*</span></label>
+                <input id="p-apellidos" type="text" placeholder="Ej. Ramírez Morales" oninput="updatePreview()">
+              </div>
+            </div>
+            <div class="row cols-2">
+              <div class="field">
+                <label>Grado- Grupo<span class="req">*</span></label>
+                <select id="p-grado" onchange="updatePreview()">
+                  <option value="">Selecciona</option>
+                  <option>1°A</option><option>1°B</option><option>1°C</option>
+                  <option>2°A</option><option>2°B</option><option>2°C</option>
+                  <option>3°A</option><option>3°B</option><option>3°C</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Turno</label>
+                <select id="p-turno" onchange="updatePreview()">
+                  <option>Matutino</option>
+                  <option>Vespertino</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETALLE AUSENCIA -->
+        <div class="card">
+          <div class="card-header"><div class="dot"></div><h2>Detalle de la ausencia</h2></div>
+          <div class="card-body">
+            <div class="row cols-2">
+              <div class="field">
+                <label for="p-fecha">Fecha de ausencia<span class="req">*</span></label>
+                <input id="p-fecha" type="date" oninput="updatePreview()">
+              </div>
+              <div class="field" id="p-fecha-fin-wrap">
+                <label>Hasta (si aplica)</label>
+                <input id="p-fecha-fin" type="date" oninput="updatePreview()">
+              </div>
+            </div>
+<script>
+  // Esta parte configura los límites de 3 días al cargar
+  (function() {
+    const hoy = new Date();
+    const formatear = (d) => d.toISOString().split('T')[0];
+    
+    const min = new Date(); min.setDate(hoy.getDate() - 3);
+    const max = new Date(); max.setDate(hoy.getDate() + 3);
+    
+    const fechaInicio = document.getElementById('p-fecha');
+    const fechaFin = document.getElementById('p-fecha-fin');
+    
+    // Aplicamos el rango general de 3 días
+    fechaInicio.min = formatear(min);
+    fechaInicio.max = formatear(max);
+    fechaFin.min = formatear(min);
+    fechaFin.max = formatear(max);
+
+    // Mejora opcional: Que la fecha "Hasta" no pueda ser menor a la de "Inicio"
+    fechaInicio.addEventListener('change', () => {
+      fechaFin.min = fechaInicio.value;
+    });
+  })();
+
+  function updatePreview() {
+    // Tu función existente aquí
+    console.log("Actualizando preview...");
+  }
+</script>
+            <!-- Fila de horas + checkbox -->
+            <div class="row cols-3" id="p-horas-row">
+              <div class="field" id="p-hora-entrada-field">
+                <label>Hora de llegada</label>
+                <input id="p-hora-entrada" type="time" oninput="updatePreview()">
+              </div>
+              <div class="field" id="p-hora-salida-field">
+                <label>Hora de salida</label>
+                <input id="p-hora-salida" type="time" oninput="updatePreview()">
+              </div>
+              <div class="field" id="p-todo-dia-field">
+                <label class="checkbox-label">
+                  <input id="p-todo-dia" type="checkbox" onchange="onTodoDiaChange()">
+                  <span>Todo el día</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="row cols-1">
+              <div class="field">
+                <label>Motivo detallado<span class="req">*</span></label>
+                <textarea id="p-motivo" placeholder="Describe el motivo de la solicitud…" oninput="updatePreview()"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATOS TUTOR -->
+        <div class="card">
+          <div class="card-header"><div class="dot"></div><h2>Datos de contacto</h2></div>
+          <div class="card-body">
+        
+            <div class="row cols-2">
+              <div class="field">
+                <label>Teléfono de contacto</label>
+                <input id="p-tel" type="tel" placeholder="Ej. 123 456 7890" oninput="updatePreview()">
+              </div>
+              <div class="field">
+                <label>Correo electrónico</label>
+                <input id="p-correo" type="text" placeholder="ejemplo@dominio.com" oninput="updatePreview()">
+                <small id="correo-msg" style="display:none; color:var(--guinda); font-size:9px; margin-top:4px;">
+                  El correo es opcional; escribe "ninguno" si no tienes.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADJUNTO -->
+        <div class="card">
+          <div class="card-header">
+            <div class="dot"></div>
+            <h2>Documento de respaldo <span style="font-size:9px;font-weight:400;font-style:italic;color:var(--text-s)">(opcional)</span></h2>
+          </div>
+          <div class="card-body">
+            <div class="upload-zone" onclick="document.getElementById('p-file').click()">
+              <p>Toca para adjuntar receta, cita médica o documento</p>
+              <small>PDF · JPG · PNG · Máx. 5 MB</small>
+            </div>
+            <input type="file" id="p-file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="showFile()">
+            <div class="file-badge" id="p-file-badge">
+              <span class="name" id="p-file-name"></span>
+              <button onclick="removeFile()">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="resetForm()">Limpiar</button>
+          <button class="btn btn-pdf" onclick="generarPDF()">Generar PDF</button>
+          <button class="btn btn-primary" id="p-btn-enviar" disabled onclick="enviarSolicitud()">Enviar solicitud</button>
+        </div>
+
+        <div class="success-banner" id="p-success">
+          <strong>Solicitud enviada correctamente.</strong>
+          Tu folio es <strong id="p-folio-display"></strong>. Recibirás una notificación cuando sea revisada.
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div>
+        <div class="preview-card">
+          <div class="preview-header">
+            <span>Vista previa</span>
+            <div class="folio-badge" id="p-prev-folio">ST14-2026-????</div>
+          </div>
+          <div class="preview-body">
+            <div class="preview-school">Secundaria Técnica 14</div>
+            <div class="preview-sub">Sistema de Asistencias · 2025–2026</div>
+            <div class="preview-tipo" id="p-prev-tipo">— Tipo no seleccionado —</div>
+            <div class="pv-row">
+              <div class="pv-lbl">Alumno</div>
+              <div class="pv-val" id="p-prev-alumno"><span class="empty">Sin nombre</span></div>
+            </div>
+            <div class="pv-row">
+              <div class="pv-lbl">Grado / Turno</div>
+              <div class="pv-val" id="p-prev-grado"><span class="empty">—</span></div>
+            </div>
+            <hr class="preview-divider">
+            <div class="pv-row">
+              <div class="pv-lbl">Fecha</div>
+              <div class="pv-val" id="p-prev-fecha"><span class="empty">Sin fecha</span></div>
+            </div>
+            <div class="pv-row">
+              <div class="pv-lbl">Horario</div>
+              <div class="pv-val" id="p-prev-hora"><span class="empty">—</span></div>
+            </div>
+            <div class="pv-row">
+              <div class="pv-lbl">Motivo</div>
+              <div class="pv-val" id="p-prev-motivo"><span class="empty">Sin motivo</span></div>
+            </div>
+            <hr class="preview-divider">
+            <div class="pv-row">
+              <div class="pv-lbl">Solicitado por</div>
+              <div class="pv-val" id="p-prev-tutor"><span class="empty">—</span></div>
+            </div>
+            <div class="pv-row">
+              <div class="pv-lbl">Contacto</div>
+              <div class="pv-val" id="p-prev-contacto"><span class="empty">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="page-footer">
+  Secundaria Técnica 14 · Sistema de Gestión Escolar · Ciclo 2025–2026
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="PermisosDocentes.js"></script>
+</body>
+</html>

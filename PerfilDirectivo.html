@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil | Secundaria Técnica 14</title>
+<link rel="stylesheet" href="StylePermisosDocente.css">
+<link rel="stylesheet" href="StyleSistema.css">
+<style>
+  /* ── Sidebar de perfil ── */
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.75rem;
+    align-items: start;
+  }
+  .profile-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+  /* Tarjeta lateral */
+  .sidebar-card {
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .sidebar-card-top {
+    background: var(--guinda);
+    padding: 1.75rem 1rem 1.25rem;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    position: relative;
+  }
+  .sidebar-card-top::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(-45deg,
+      transparent, transparent 14px,
+      rgba(255,255,255,.03) 14px, rgba(255,255,255,.03) 15px);
+  }
+  .sidebar-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(255,255,255,.2); color: #fff;
+    font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid rgba(255,255,255,.4); position: relative; z-index: 1;
+  }
+  .sidebar-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 13.5px; font-weight: 700; color: #fff;
+    text-align: center; line-height: 1.25; position: relative; z-index: 1;
+  }
+  .sidebar-role-badge {
+    background: rgba(255,255,255,.2); color: rgba(255,255,255,.9);
+    font-size: 9px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; padding: 3px 12px; border-radius: 20px;
+    position: relative; z-index: 1;
+  }
+  .sidebar-meta { padding: 1rem; }
+  .sidebar-meta-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: .55rem 0; border-bottom: 1px solid var(--line);
+    font-size: 11.5px;
+  }
+  .sidebar-meta-item:last-child { border-bottom: none; }
+  .smi-label {
+    font-size: 9px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-s); min-width: 65px; margin-top: 1px;
+  }
+  .smi-value { color: var(--text); font-weight: 500; }
+
+  /* Quick links sidebar */
+  .sidebar-links { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 9px;
+    padding: .7rem 1rem; font-size: 11.5px; font-weight: 600;
+    color: var(--text-s); text-decoration: none;
+    border-bottom: 1px solid var(--line); transition: all .15s;
+    cursor: pointer; border-left: 3px solid transparent;
+  }
+  .sidebar-link:last-child { border-bottom: none; }
+  .sidebar-link:hover { color: var(--guinda); background: var(--guinda-bg); border-left-color: var(--guinda); }
+  .sidebar-link.active { color: var(--guinda); background: var(--guinda-bg); border-left-color: var(--guinda); }
+  .sl-icon { font-size: 14px; width: 20px; text-align: center; }
+
+  /* School chip */
+  .school-chip {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--guinda-bg); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: .75rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .school-chip-icon { font-size: 18px; }
+  .school-chip-text strong { display: block; font-size: 12px; font-weight: 700; color: var(--text); }
+  .school-chip-text span { font-size: 10px; color: var(--text-s); letter-spacing: .06em; text-transform: uppercase; }
+
+  @media (max-width: 750px) {
+    .profile-layout { grid-template-columns: 1fr; }
+    .profile-sidebar { flex-direction: row; flex-wrap: wrap; }
+    .sidebar-card, .sidebar-links { flex: 1 1 200px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="#" class="logo">
+    <div class="logo-s">S14</div>
+    <div class="logo-text">
+      <strong>Esc. Sec. Téc. 14 "RAMON LOPEZ VELARDE"</strong>
+      <span>Sistema de Gestión de Permisos</span>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+</header>
+
+<!-- Hero -->
+ <div class="hero">
+  <div class="hero-inner">
+      <div class="breadcrumb">
+      <a href="#">Inicio</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Perfil</span>
+    </div>
+    <h1>Perfil</h1>
+   <p>Información personal y datos de la cuenta</p>
+  </div>
+</div>
+
+<!-- Contenido -->
+<div class="page-main">
+
+  <!-- Alert de éxito -->
+  <div class="alert alert-success" id="alert-success">
+    <span class="alert-icon">✓</span>
+    <div class="alert-body">
+      <strong>Datos actualizados correctamente.</strong>
+      Los cambios han sido guardados en el sistema.
+    </div>
+  </div>
+
+  <div class="profile-layout">
+
+    <!-- SIDEBAR -->
+    <div class="profile-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-top">
+          <div class="sidebar-avatar" id="sb-avatar">MG</div>
+          <div class="sidebar-name" id="sb-name">María González Morales</div>
+          <div class="sidebar-role-badge" id="sb-role">Docente</div>
+        </div>
+        <div class="sidebar-meta">
+          <div class="sidebar-meta-item">
+            <span class="smi-label">Turno</span>
+            <span class="smi-value" id="sb-turno">Matutino</span>
+          </div>
+          <div class="sidebar-meta-item">
+            <span class="smi-label">Grado</span>
+            <span class="smi-value" id="sb-grado">2°B</span>
+          </div>
+          <div class="sidebar-meta-item">
+            <span class="smi-label">Correo</span>
+            <span class="smi-value" id="sb-correo" style="font-size:10.5px;word-break:break-all;">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-links">
+        <a class="sidebar-link active" href="Perfil.html">
+          <span class="sl-icon"></span> Mi perfil
+        </a>
+        <a class="sidebar-link" href="CambiarContrasena.html">
+          <span class="sl-icon"></span> Contraseña
+        </a>
+        <a class="sidebar-link" href="AdministrarPersonal.html">
+          <span class="sl-icon"></span> Administración
+        </a>
+        
+      </div>
+    </div>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <div>
+
+      <!-- Escuela actual -->
+      <div class="school-chip">
+        <span class="school-chip-icon"></span>
+        <div class="school-chip-text">
+          <strong id="chip-escuela">Secundaria Técnica 14</strong>
+          <span>Escuela asignada · Ciclo 2025–2026</span>
+        </div>
+      </div>
+
+      <!-- Datos personales -->
+      <div class="card">
+        <div class="card-header">
+          <div class="ch-dot"></div>
+          <h2>Datos personales</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Nombre(s)<span class="req">*</span></label>
+              <input id="f-nombre" type="text" placeholder="Ej. María">
+            </div>
+            <div class="form-field">
+              <label>Apellido Paterno<span class="req">*</span></label>
+              <input id="f-ap-paterno" type="text" placeholder="Ej. González">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Apellido Materno</label>
+              <input id="f-ap-materno" type="text" placeholder="Ej. Morales">
+            </div>
+            <div class="form-field">
+              <label>CURP</label>
+              <input id="f-curp" type="text" placeholder="18 caracteres" maxlength="18"
+                style="text-transform:uppercase">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Correo electrónico<span class="req">*</span></label>
+              <input id="f-correo" type="email" placeholder="correo@dominio.com">
+            </div>
+            <div class="form-field">
+              <label>Teléfono</label>
+              <input id="f-tel" type="tel" placeholder="Ej. 442 123 4567">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Fecha de nacimiento</label>
+              <input id="f-nacimiento" type="date">
+            </div>
+            <div class="form-field">
+              <label>Estado</label>
+              <input id="f-estado" type="text" placeholder="Ej. Hidalgo">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domicilio -->
+      <div class="card">
+        <div class="card-header">
+          <div class="ch-dot"></div>
+          <h2>Domicilio</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Municipio / Alcaldía</label>
+              <input id="f-municipio" type="text" placeholder="Ej. Hidalgo">
+            </div>
+            <div class="form-field">
+              <label>Colonia</label>
+              <input id="f-colonia" type="text" placeholder="Ej. Centro">
+            </div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-field">
+              <label>Calle</label>
+              <input id="f-calle" type="text" placeholder="Nombre de la calle">
+            </div>
+            <div class="form-field">
+              <label>Núm. Exterior</label>
+              <input id="f-num-ext" type="text" placeholder="Ej. 42">
+            </div>
+            <div class="form-field">
+              <label>Núm. Interior</label>
+              <input id="f-num-int" type="text" placeholder="Ej. 3">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Código Postal</label>
+              <input id="f-cp" type="text" placeholder="Ej. 76000" maxlength="5">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos laborales -->
+      <div class="card">
+        <div class="card-header">
+          <div class="ch-dot"></div>
+          <h2>Datos laborales / académicos</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Rol en el sistema</label>
+              <input id="f-rol" type="text" readonly>
+            </div>
+            <div class="form-field">
+              <label>Turno asignado</label>
+              <select id="f-turno">
+                <option>Matutino</option>
+                <option>Vespertino</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label>Grado / Grupo Tutorado </label>
+              <select id="f-grado">
+                <option value="">— Sin asignación —</option>
+                <option>1°A</option><option>1°B</option><option>1°C</option>
+                <option>2°A</option><option>2°B</option><option>2°C</option>
+                <option>3°A</option><option>3°B</option><option>3°C</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sección académica (solo si estudia) -->
+          <div id="sec-academica" style="display:none">
+            <hr class="divider">
+            <div class="form-row cols-2">
+              <div class="form-field">
+                <label>Tipo de grado</label>
+                <select id="f-tipo-grado">
+                  <option>Semestre</option><option>Cuatrimestre</option><option>Año</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Grado actual</label>
+                <input id="f-grado-num" type="number" min="1" max="12" placeholder="Ej. 6">
+              </div>
+            </div>
+            <div class="form-row cols-1">
+              <div class="form-field">
+                <label>Carrera</label>
+                <input id="f-carrera" type="text" placeholder="Ej. Ingeniería en Sistemas Computacionales">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="cancelarCambios()">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarPerfil()">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="page-footer">
+  Secundaria Técnica 14 · Sistema de Gestión Escolar · Ciclo 2025–2026
+</footer>
+
+<script src="Sistema.js"></script>
+<script>
+/* ─── Populate form with SESSION data ────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const S = SESSION;
+  const initials = getInitials(S.nombre, S.apellidos);
+
+  // Sidebar
+  document.getElementById('sb-avatar').textContent = initials;
+  document.getElementById('sb-name').textContent   = `${S.nombre} ${S.apellidos}`;
+  document.getElementById('sb-role').textContent   = S.rol;
+  document.getElementById('sb-turno').textContent  = S.turno;
+  document.getElementById('sb-grado').textContent  = S.grado || '—';
+  document.getElementById('sb-correo').textContent = S.correo;
+  document.getElementById('chip-escuela').textContent = S.escuela;
+
+  // Formulario
+  document.getElementById('f-nombre').value     = S.nombre;
+  document.getElementById('f-ap-paterno').value = S.apellidos.split(' ')[0] || '';
+  document.getElementById('f-ap-materno').value = S.apellidos.split(' ')[1] || '';
+  document.getElementById('f-curp').value       = S.curp || '';
+  document.getElementById('f-correo').value     = S.correo;
+  document.getElementById('f-tel').value        = S.telefono;
+  document.getElementById('f-rol').value        = S.rol;
+  document.getElementById('f-turno').value      = S.turno;
+  document.getElementById('f-grado').value      = S.grado || '';
+});
+
+/* ─── Mostrar/ocultar sección académica ─────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const sel = document.getElementById('f-estudia');
+  sel.addEventListener('change', () => {
+    document.getElementById('sec-academica').style.display =
+      sel.value === 'si' ? 'block' : 'none';
+  });
+});
+
+/* ─── Guardar ────────────────────────────────────── */
+function guardarPerfil() {
+  const nombre = document.getElementById('f-nombre').value.trim();
+  const correo = document.getElementById('f-correo').value.trim();
+  if (!nombre || !correo) {
+    alert('Por favor completa los campos obligatorios (Nombre y Correo).');
+    return;
+  }
+  // Actualizar sidebar en vivo
+  const ap1 = document.getElementById('f-ap-paterno').value.trim();
+  const ap2 = document.getElementById('f-ap-materno').value.trim();
+  document.getElementById('sb-name').textContent   = `${nombre} ${ap1} ${ap2}`.trim();
+  document.getElementById('sb-correo').textContent = correo;
+  document.getElementById('sb-avatar').textContent = getInitials(nombre, ap1 + ' ' + ap2);
+
+  const alert = document.getElementById('alert-success');
+  alert.classList.add('show');
+  setTimeout(() => alert.classList.remove('show'), 4000);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelarCambios() {
+  if (confirm('¿Descartar los cambios?')) window.location.reload();
+}
+</script>
+<!-- Driver.js CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+<!-- Botón flotante de ayuda -->
+<button id="btn-ayuda" onclick="iniciarTutorialPerfil()" title="¿Cómo usar esta página?">
+  ?
+</button>
+</body>
+</html>

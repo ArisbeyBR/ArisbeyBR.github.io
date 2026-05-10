@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+        <div class="login-left" id="left-panel">
+            <div class="left-content">
+
+                <h2>Secundaria<br>Técnica</h2>
+                <p class="subtitle">SISTEMA DE ASISTENCIAS · 2025-2026</p>
+                
+                <div id="dynamic-features" class="features-list">
+                    </div>
+            </div>
+        </div>
+
+        <div class="login-right">
+            <div class="form-wrapper">
+                <h2>Iniciar sesión</h2>
+                <p>Selecciona tu rol e ingresa tus credenciales</p>
+
+                <div class="role-selector">
+                    <button class="role-btn active" data-role="directivo">Directivo</button>
+                    <button class="role-btn" data-role="docente">Docente</button>
+                    <button class="role-btn" data-role="padre">Padre / Tutor</button>
+                </div>
+
+                
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <label>CORREO ELECTRÓNICO</label>
+                        <input type="email" placeholder="correo@sec.edu" required>
+                    </div>
+                    <div class="input-group">
+                        <label>CONTRASEÑA</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit">ENTRAR AL SISTEMA</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+    <!-- Driver.js CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+<!-- Botón flotante de ayuda -->
+<button id="btn-ayuda" onclick="iniciarTutorial()" title="¿Cómo usar esta página?">
+  ?
+</button>
+</body>
+</html>
