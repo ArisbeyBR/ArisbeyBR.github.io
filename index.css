@@ -63,10 +63,10 @@ a { text-decoration: none; }
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.hero-content { max-width: 650px; margin-bottom: 80px;}
+.hero-content { max-width: 550px; margin-bottom: 80px;}
 
 .hero-content p.subtitle { text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 10px; }
-.hero-content h1 { font-size: 4rem; line-height: 1.1; margin: 0 0 20px 0; }
+.hero-content h1 { font-size: 50px; line-height: 1.1; margin: 0 0 20px 0; }
 .hero-content p.desc { font-size: 1.1rem; opacity: 0.9; margin-bottom: 30px; }
 
 .btn-primary {
